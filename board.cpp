@@ -1,5 +1,21 @@
+/*
+   Copyright 2022 Bruno Rodrigues Ferreira
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 #include "board.h"
-#include <iostream>
+#include <sstream>
 
 board::board()
 {
@@ -96,12 +112,14 @@ bool board::is_valid_block_value(int x, int y, int value)
     return true;
 }
 
-void board::print()
+std::string board::to_string()
 {
+    std::stringstream ss;
     for (auto & row : cells) {
         for (auto & cell : row) {
-            std::cout << cell.value << " ";
+            ss << cell.value << " ";
         }
-        std::cout << "\n";
+        ss << "\n";
     }
+    return ss.str();
 }
