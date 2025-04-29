@@ -1,0 +1,24 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "output",
+    srcs = [
+        "output_factory.cpp",
+        "output_file.cpp",
+        "output_google_cloud_storage.cpp",
+        "output_stdout.cpp",
+    ],
+    hdrs = [
+        "output.h",
+        "output_factory.h",
+        "output_file.h",
+        "output_google_cloud_storage.h",
+        "output_stdout.h",
+    ],
+    visibility = ["//src/app:__pkg__"],
+    deps = [
+        "@boost//:log",
+        "@boost//:url",
+        "@com_github_googleapis_google_cloud_cpp//:storage",
+    ],
+)

@@ -1,0 +1,47 @@
+workspace(name = "sudoku-gen")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "catch2",
+    strip_prefix = "Catch2-3.4.0",
+    urls = ["https://github.com/catchorg/Catch2/archive/v3.4.0.tar.gz"],
+)
+
+_RULES_BOOST_COMMIT = "7a9c37fea3a8d1db71fefca885cee9e4295ac820"
+
+http_archive(
+    name = "com_github_nelhage_rules_boost",
+    strip_prefix = "rules_boost-%s" % _RULES_BOOST_COMMIT,
+    url = "https://github.com/nelhage/rules_boost/archive/%s.tar.gz" % _RULES_BOOST_COMMIT,
+)
+
+load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
+
+boost_deps()
+
+http_archive(
+    name = "com_github_googleapis_google_cloud_cpp",
+    strip_prefix = "google-cloud-cpp-2.14.0",
+    url = "https://github.com/googleapis/google-cloud-cpp/archive/v2.14.0.tar.gz",
+)
+
+load("@com_github_googleapis_google_cloud_cpp//bazel:google_cloud_cpp_deps.bzl", "google_cloud_cpp_deps")
+
+google_cloud_cpp_deps()
+
+load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
+
+switched_rules_by_language(
+    name = "com_google_googleapis_imports",
+    cc = True,
+    grpc = True,
+)
+
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+
+grpc_deps()
+
+load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+
+grpc_extra_deps()

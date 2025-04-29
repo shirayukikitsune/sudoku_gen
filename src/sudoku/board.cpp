@@ -27,6 +27,16 @@ board::board()
     }
 }
 
+board::board(std::array<int, 81> values) {
+    for (int i = 0; i < values.size(); ++i) {
+        int x = i / 9;
+        int y = i % 9;
+        cells[x][y].x = x;
+        cells[x][y].y = y;
+        cells[x][y].value = values[i];
+    }
+}
+
 cell* board::get_cell(int x, int y)
 {
     return &cells[x][y];
@@ -117,9 +127,14 @@ std::string board::to_string()
     std::stringstream ss;
     for (auto & row : cells) {
         for (auto & cell : row) {
-            ss << cell.value << " ";
+            ss << cell.value;
+            if (cell.y != 8) {
+                ss << " ";
+            }
         }
-        ss << "\n";
+        if (row[0].x != 8) {
+            ss << "\n";
+        }
     }
     return ss.str();
 }

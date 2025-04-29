@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <fstream>
 #include <iostream>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
@@ -23,15 +22,17 @@ limitations under the License.
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/program_options.hpp>
 
-#include "board.h"
-#include "board_generator.h"
-#include "digger.h"
-#include "solver.h"
+#include "src/sudoku/board.h"
+#include "src/sudoku/board_generator.h"
+#include "src/sudoku/digger.h"
+#include "src/output/output_factory.h"
+#include "src/sudoku/solver.h"
 
 namespace po = boost::program_options;
 
 int main(int argc, char** argv)
 {
+    boost::log::add_common_attributes();
     po::options_description desc("Allowed options");
     desc.add_options()
             ("help,h", "produce help message")
@@ -113,7 +114,12 @@ int main(int argc, char** argv)
 
     BOOST_LOG_TRIVIAL(info) << "Using " << seq->name() << " sequence generator";
 
-    boost::log::add_common_attributes();
+    std::string filename = vm["output"].as<std::string>();
+    auto output = output_factory::make(filename);
+    if (!output) {
+        return 1;
+    }
+
     g.generate(&b);
 
     BOOST_LOG_TRIVIAL(debug) << boost::log::add_value("Board", b.to_string()) << "generated initial seed";
@@ -124,19 +130,7 @@ int main(int argc, char** argv)
     d.dig(&b, seq, dif);
     BOOST_LOG_TRIVIAL(debug) << boost::log::add_value("Board", b.to_string()) << "dig complete";
 
-    std::ostream *output = &std::cout;
-    std::string filename = vm["output"].as<std::string>();
-    std::ofstream filestream;
-    if (filename != "-") {
-        filestream.open(filename.c_str(), std::ios::out | std::ios::trunc);
-        output = &filestream;
-    }
-
-    *output << b.to_string() << std::endl;
-
-    if (filestream.is_open()) {
-        filestream.close();
-    }
+    output->write(b.to_string());
 
     return 0;
 }

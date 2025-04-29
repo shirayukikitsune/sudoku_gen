@@ -16,27 +16,11 @@ limitations under the License.
 
 #pragma once
 
-#include "cell.h"
-#include <set>
-#include <string>
+#include "output.h"
 
-class board {
+class output_stdout : public output {
 public:
-    board();
+    ~output_stdout() override = default;
 
-    cell* get_cell(int x, int y);
-
-    bool is_full();
-
-    bool validate();
-    bool is_valid_value(int x, int y, int value);
-
-    std::string to_string();
-
-private:
-    cell cells[9][9];
-
-    bool is_valid_column_value(int x, int y, int value);
-    bool is_valid_row_value(int x, int y, int value);
-    bool is_valid_block_value(int x, int y, int value);
+    void write(const std::string& data) final;
 };

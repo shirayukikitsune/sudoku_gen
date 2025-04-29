@@ -1,0 +1,32 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
+
+cc_library(
+    name = "sudoku",
+    srcs = [
+        "board.cpp",
+        "board_generator.cpp",
+        "digger.cpp",
+        "solver.cpp",
+    ],
+    hdrs = [
+        "board.h",
+        "board_generator.h",
+        "cell.h",
+        "digger.h",
+        "solver.h",
+    ],
+    visibility = [
+        "//src/app:__pkg__",
+    ],
+)
+
+cc_test(
+    name = "test_main",
+    srcs = [
+        "board_test.cpp",
+    ],
+    deps = [
+        ":sudoku",
+        "@catch2//:catch2_main",
+    ],
+)

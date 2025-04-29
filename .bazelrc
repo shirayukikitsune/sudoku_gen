@@ -1,0 +1,2 @@
+build --show_timestamps --verbose_failures --cxxopt=-std=c++20
+coverage --combined_report=lcov --instrument_test_targets --experimental_generate_llvm_lcov
